@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// Estructura de los libros de la biblioteca
+
 struct Libro {
     char titulo[50];
     char autor[50];
@@ -18,7 +18,7 @@ struct Libro {
     Libro* siguiente; //puntero a un siguiente libro
 };
 
-// Estructura para solicitar los libros
+
 struct Solicitud {
     char nombreLector[50];
     char dni[15];
@@ -27,7 +27,7 @@ struct Solicitud {
     Solicitud* siguiente;
 };
 
-// Función para cargar libros desde "biblioteca.txt"
+// Función para cargar los libros desde "biblioteca.txt"
 Libro* cargarLibrosDesdeArchivo() {
     ifstream archivo("biblioteca.txt");
     if (!archivo.is_open()) {
@@ -68,7 +68,7 @@ void guardarLibroEnArchivo(Libro* libro) {
     archivo.close();
 }
 
-// Almacena en el archivo "libros_prestados.txt" los libros prestados o los usuarios que estan en espera de un libro
+// guarda en "libros_prestados.txt" los libros prestados o los usuarios que estan en la lista de espera  de un libro
 void guardarLibroPrestadoEnArchivo(Libro* libro, const Solicitud* solicitud) {
     ofstream archivo("libros_prestados.txt", ios::app);
     if (!archivo.is_open()) {
@@ -86,7 +86,7 @@ void guardarLibroPrestadoEnArchivo(Libro* libro, const Solicitud* solicitud) {
     archivo.close();
 }
 
-// Función para buscar un libro por título
+// Función para buscar un libro por su titulo título
 Libro* buscarLibro(Libro* cabeza, const char* titulo) {
     while (cabeza != nullptr) {
         if (strcmp(cabeza->titulo, titulo) == 0) return cabeza;
@@ -95,7 +95,7 @@ Libro* buscarLibro(Libro* cabeza, const char* titulo) {
     return nullptr;
 }
 
-// Muestra todos los libros disponibles en la biblioteca, recorre los nodos hasta llegar al que apunte a null
+// Muestra todos los libros de la biblioteca, recorre los nodos y imprime los datos hasta llegar al que tenga el puntero a null
 void mostrarLibrosDisponibles(Libro* cabeza) {
     bool disponibles = false;
     while (cabeza != nullptr) {
@@ -125,7 +125,7 @@ int obtenerOpcionMenu(const string& mensaje) {
     }
 }
 
-// Función para obtener cadenas no vacías
+// Función para obtener caracteres 
 void obtenerCadena(const string& mensaje, char* destino, int maxLen) {
     while (true) {
         cout << mensaje;
@@ -135,7 +135,7 @@ void obtenerCadena(const string& mensaje, char* destino, int maxLen) {
     }
 }
 
-// Agrega un nuevo libro y actualiza "biblioteca.txt"
+// Agrega un nuevo libro y guarda en  "biblioteca.txt"
 Libro* agregarLibro(Libro* cabeza) {
     Libro* nuevo = new Libro;
     obtenerCadena("Ingrese el titulo del libro: ", nuevo->titulo, 50);
@@ -154,7 +154,7 @@ Libro* agregarLibro(Libro* cabeza) {
     return nuevo;
 }
 
-// Solicitar libro y añadir a lista de espera si no está disponible
+// pedir libro y añadir a lista de espera si ya esta en prestamo
 void solicitarLibro(Libro* cabeza) { 
     Solicitud* nuevaSolicitud = new Solicitud;
     obtenerCadena("Ingrese el nombre del lector: ", nuevaSolicitud->nombreLector, 50);
@@ -219,7 +219,7 @@ void devolverLibro(Libro* cabeza) {
     archivoLectura.close();
     archivoTemporal.close();
     remove("libros_prestados.txt");
-    rename("libros_prestados_temp.txt", "libros_prestados.txt");
+    rename("libros_prestados_temp.txt", "libros_prestados.txt"); //el txt temporal pasa a ser el principal y se borra el anterior
 
     cout << "Libro devuelto exitosamente." << endl;
 }
@@ -236,7 +236,7 @@ void limpiarArchivos() {
     }
 }
 
-// Función principal con menú de opciones
+
 int main() {
     Libro* biblioteca = cargarLibrosDesdeArchivo();
     int opcion;
@@ -263,3 +263,4 @@ int main() {
 
     return 0;
 }
+
