@@ -20,7 +20,7 @@ class Solicitud:
         self.en_espera = en_espera
         self.siguiente = None
 
-# Cargar libros desde el archivo
+# Cargar libros desde el txt biblioteca
 def cargar_libros_desde_archivo():
     if not os.path.exists("biblioteca.txt"):
         print("No se pudo abrir el archivo biblioteca.txt para leer.")
@@ -51,14 +51,14 @@ def cargar_libros_desde_archivo():
 
     return cabeza
 
-# Guardar un libro en el archivo
+# Guardar un libro en el archivo bibliioteca.txt
 def guardar_libro_en_archivo(libro):
     with open("biblioteca.txt", "a") as archivo:
         archivo.write(f"{libro.titulo},{libro.autor},{libro.anio_edicion},"
                       f"{libro.editorial},{libro.isbn},{libro.num_paginas},"
                       f"{libro.copias},{int(libro.prestado)}\n")
 
-# Guardar libros prestados o usuarios en espera en el archivo
+# Guardar libros prestados o usuarios en espera en el archivo libros_prestados.txt
 def guardar_libro_prestado_en_archivo(libro, solicitud):
     with open("libros_prestados.txt", "a") as archivo:
         archivo.write(f"{libro.titulo},{libro.autor},{libro.anio_edicion},"
@@ -78,7 +78,7 @@ def buscar_libro(cabeza, titulo):
         cabeza = cabeza.siguiente
     return None
 
-# Mostrar libros disponibles
+# Mostrar libros disponibles imprimiendo a traves de un while
 def mostrar_libros_disponibles(cabeza):
     disponibles = False
     while cabeza is not None:
@@ -98,11 +98,11 @@ def obtener_opcion_menu(mensaje):
             if valor >= 0:
                 return valor
             else:
-                print("Por favor, ingrese un número entero positivo o 0 para salir.")
+                print("Por favor, ingrese un numero entero positivo o 0 para salir.")
         except ValueError:
-            print("Entrada no válida. Por favor, ingrese un número entero.")
+            print("Entrada no valida. Por favor, ingrese un numero entero.")
 
-# Obtener una cadena no vacía
+# Obtener array que no sea vacio
 def obtener_cadena(mensaje, max_len):
     while True:
         entrada = input(mensaje).strip()
@@ -113,12 +113,12 @@ def obtener_cadena(mensaje, max_len):
 # Agregar un nuevo libro y actualizar el archivo
 def agregar_libro(cabeza):
     nuevo = Libro(
-        titulo=obtener_cadena("Ingrese el título del libro: ", 50),
+        titulo=obtener_cadena("Ingrese el titulo del libro: ", 50),
         autor=obtener_cadena("Ingrese el autor del libro: ", 50),
-        anio_edicion=obtener_opcion_menu("Ingrese el año de edición: "),
+        anio_edicion=obtener_opcion_menu("Ingrese el fecha de edicion: "),
         editorial=obtener_cadena("Ingrese la editorial del libro: ", 50),
         isbn=obtener_cadena("Ingrese el ISBN del libro: ", 13),
-        num_paginas=obtener_opcion_menu("Ingrese el número de páginas: "),
+        num_paginas=obtener_opcion_menu("Ingrese el numero de paginas: "),
         copias=obtener_opcion_menu("Ingrese la cantidad de copias: "),
         prestado=False
     )
@@ -127,12 +127,12 @@ def agregar_libro(cabeza):
     print("Libro agregado exitosamente.")
     return nuevo
 
-# Solicitar libro y añadir a lista de espera si no está disponible
+# Solicitar libro y añadir a lista de espera si ya esta prestado
 def solicitar_libro(cabeza):
     solicitud = Solicitud(
         nombre_lector=obtener_cadena("Ingrese el nombre del lector: ", 50),
         dni=obtener_cadena("Ingrese el DNI del lector: ", 15),
-        titulo_libro=obtener_cadena("Ingrese el título del libro: ", 50)
+        titulo_libro=obtener_cadena("Ingrese el titulo del libro: ", 50)
     )
 
     libro = buscar_libro(cabeza, solicitud.titulo_libro)
@@ -140,20 +140,20 @@ def solicitar_libro(cabeza):
         print("El libro no existe en la biblioteca.")
     elif libro.prestado:
         solicitud.en_espera = True
-        print("El libro ya está prestado. Se agregará a la lista de espera.")
+        print("El libro ya esta prestado. Se agregara a la lista de espera.")
         guardar_libro_prestado_en_archivo(libro, solicitud)
     else:
         libro.prestado = True
         guardar_libro_prestado_en_archivo(libro, solicitud)
         print("Libro prestado exitosamente.")
 
-# Devolver el libro prestado y actualizar los archivos
+# Devolver el libro prestado y actualizar los txt
 def devolver_libro(cabeza):
-    titulo = obtener_cadena("Ingrese el título del libro a devolver: ", 50)
+    titulo = obtener_cadena("Ingrese el titulo del libro a devolver: ", 50)
     libro = buscar_libro(cabeza, titulo)
 
     if libro is None or not libro.prestado:
-        print("El libro no se encuentra en préstamo o no existe en la biblioteca.")
+        print("El libro no se encuentra en prestamo o no existe en la biblioteca.")
         return
 
     libro.prestado = False
@@ -176,13 +176,13 @@ def devolver_libro(cabeza):
     os.rename("libros_prestados_temp.txt", "libros_prestados.txt")
     print("Libro devuelto exitosamente.")
 
-# Limpiar archivos
+# Eliminar datos de los txt
 def limpiar_archivos():
     with open("biblioteca.txt", "w"), open("libros_prestados.txt", "w"):
         pass
     print("Todos los archivos han sido limpiados.")
 
-# Función principal con menú de opciones
+
 def main():
     biblioteca = cargar_libros_desde_archivo()
     while True:
@@ -209,7 +209,7 @@ def main():
             print("Saliendo del sistema.")
             break
         else:
-            print("Opción no válida.")
+            print("Opcion no valida.")
 
 if __name__ == "__main__":
     main()
